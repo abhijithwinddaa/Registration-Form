@@ -1,0 +1,134 @@
+// Write your JS code here
+import {Component} from 'react'
+import './index.css'
+
+class RegistrationForm extends Component {
+  state = {
+    firstName: '',
+    lastName: '',
+    isFirstNameEmpty: false,
+    isLastNameEmpty: false,
+    isSubmissionSuccess: false,
+  }
+
+  onFirstNameInputBlur = firstnameBlurEvent => {
+    const changedFirstName = firstnameBlurEvent.target.value
+    const isInputFirstNameEmpty = changedFirstName === ''
+    this.setState({
+      firstName: changedFirstName,
+      isFirstNameEmpty: isInputFirstNameEmpty,
+    })
+  }
+
+  onLastNameInputBlur = lastNameBlurEvent => {
+    const changedLastName = lastNameBlurEvent.target.value
+    const isInputLastNameEmpty = changedLastName === ''
+    this.setState({
+      lastName: changedLastName,
+      isLastNameEmpty: isInputLastNameEmpty,
+    })
+  }
+
+  onRegistrationFormSubmit = formSubmitEvent => {
+    formSubmitEvent.preventDefault()
+
+    const {firstName, lastName} = this.state
+    const isInputFirstNameEmpty = firstName === ''
+    const isInputLastNameEmpty = lastName === ''
+    const isCurrentSubmissionSuccess = firstName !== '' && lastName !== ''
+
+    this.setState({
+      isFirstNameEmpty: isInputFirstNameEmpty,
+      isLastNameEmpty: isInputLastNameEmpty,
+      isSubmissionSuccess: isCurrentSubmissionSuccess,
+    })
+  }
+
+  onSubmitAnotherResponse = () =>
+    this.setState({
+      firstName: '',
+      lastName: '',
+      isFirstNameEmpty: false,
+      isLastNameEmpty: false,
+      isSubmissionSuccess: false,
+    })
+
+  render() {
+    const {isFirstNameEmpty, isLastNameEmpty, isSubmissionSuccess} = this.state
+
+    return (
+      <div className="registration-form-bg-container">
+        <h1 className="registration-form-header">Registration</h1>
+        {!isSubmissionSuccess ? (
+          <form
+            className="registration-form-input-content-container"
+            onSubmit={this.onRegistrationFormSubmit}
+          >
+            <div className="registration-form-input-container">
+              <label
+                className="registration-form-input-label"
+                htmlFor="first-name"
+              >
+                FIRST NAME
+              </label>
+              <input
+                type="text"
+                id="first-name"
+                placeholder="First Name"
+                className={`registration-form-input ${
+                  isFirstNameEmpty && 'missing-input'
+                }`}
+                onBlur={this.onFirstNameInputBlur}
+              />{' '}
+              {isFirstNameEmpty && (
+                <p className="missing-input-message">Required</p>
+              )}
+            </div>
+            <div className="registration-form-input-container">
+              <label
+                className="registration-form-input-label"
+                htmlFor="last-name"
+              >
+                LAST NAME
+              </label>
+              <input
+                type="text"
+                id="last-name"
+                placeholder="Last Name"
+                className={`registration-form-input ${
+                  isLastNameEmpty && 'missing-input'
+                }`}
+                onBlur={this.onLastNameInputBlur}
+              />{' '}
+              {isLastNameEmpty && (
+                <p className="missing-input-message">Required</p>
+              )}
+            </div>
+            <button type="submit" className="submit-button">
+              Submit
+            </button>
+          </form>
+        ) : (
+          <div className="registration-success-content-container">
+            <img
+              src="https://assets.ccbp.in/frontend/react-js/success-icon-img.png"
+              className="submission-success-icon-img"
+              alt="success"
+            />
+            <p className="submission-success-message">Submitted Successfully</p>
+            <button
+              type="button"
+              className="submit-button"
+              onClick={this.onSubmitAnotherResponse}
+            >
+              {' '}
+              Submit Another Response
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+}
+
+export default RegistrationForm
